@@ -3,26 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>無料タブレットテトリス</title>
+    <title>Tetris</title>
     <style>
         * { box-sizing: border-box; user-select: none; -webkit-user-select: none; }
         body { background: #202028; color: #fff; font-family: sans-serif; text-align: center; margin: 0; padding: 10px; overflow: hidden; }
         h1 { margin: 5px 0; font-size: 24px; }
         .info { font-size: 20px; margin-bottom: 5px; }
         canvas { border: solid 2px #fff; background: #000; display: block; margin: 0 auto; max-height: 50vh; max-width: 100%; }
-        /* タブレット用のコントローラーボタン */
         .controls { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; max-width: 300px; margin: 15px auto; }
-        .btn { background: #444; color: white; border: none; border-radius: 10px; padding: 15px; font-size: 20px; font-weight: bold; active-background: #666; touch-action: manipulation; }
+        .btn { background: #444; color: white; border: none; border-radius: 10px; padding: 15px; font-size: 20px; font-weight: bold; touch-action: manipulation; }
         .btn:active { background: #666; }
         .empty { visibility: hidden; }
     </style>
 </head>
 <body>
-    <h1>マイ・テトリス</h1>
-    <div class="info">スコア: <span id="score">0</span></div>
+    <h1>MY TETRIS</h1>
+    <div class="info">SCORE: <span id="score">0</span></div>
     <canvas id="tetris" width="240" height="400"></canvas>
 
-    <!-- タッチ用ボタン -->
     <div class="controls">
         <button class="btn" id="btn-rot-l">↺</button>
         <button class="btn" id="btn-rot-r">↻</button>
@@ -127,7 +125,7 @@
             const pieces = 'ILJOTSZ';
             player.matrix = createPiece(pieces[pieces.length * Math.random() | 0]);
             player.pos.y = 0;
-            player.pos.x = (arena[0].length / 2 | 0) - (player.matrix[0].length / 2 | 0);
+            player.pos.x = (arena.length / 2 | 0) - (player.matrix.length / 2 | 0);
             if (collide(arena, player)) {
                 arena.forEach(row => row.fill(0));
                 score = 0;
@@ -142,7 +140,7 @@
             while (collide(arena, player)) {
                 player.pos.x += offset;
                 offset = -(offset + (offset > 0 ? 1 : -1));
-                if (offset > player.matrix[0].length) {
+                if (offset > player.matrix.length) {
                     rotate(player.matrix, -dir);
                     player.pos.x = pos;
                     return;
@@ -180,7 +178,6 @@
         const arena = createMatrix(12, 20);
         const player = { pos: {x: 0, y: 0}, matrix: null };
 
-        // キーボード操作
         document.addEventListener('keydown', event => {
             if (event.keyCode === 37) playerMove(-1);
             else if (event.keyCode === 39) playerMove(1);
@@ -188,7 +185,6 @@
             else if (event.keyCode === 38) playerRotate(1);
         });
 
-        // タブレット用のボタン操作設定
         document.getElementById('btn-left').addEventListener('touchstart', (e) => { e.preventDefault(); playerMove(-1); });
         document.getElementById('btn-right').addEventListener('touchstart', (e) => { e.preventDefault(); playerMove(1); });
         document.getElementById('btn-drop').addEventListener('touchstart', (e) => { e.preventDefault(); playerDrop(); });
